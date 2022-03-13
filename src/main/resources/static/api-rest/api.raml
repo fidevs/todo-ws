@@ -1,0 +1,128 @@
+#%RAML 1.0
+title: TODO-App API
+version: v1
+baseUri: http://localhost:8080/api-{version}
+description: Api REST to serve resources for TODO web app.
+mediaType:
+  - application/json
+protocols:
+  - HTTP
+
+types:
+  Task: !include types/Task.raml
+  TaskDetails: !include types/TaskDetails.raml
+  TaskStatus: !include types/TaskStatus.raml
+  Error: !include types/Error.raml
+
+/task:
+  description: Crate and consult tasks
+  post:
+    description: Register new task
+    body:
+      application/json:
+        type: Task
+        example: !include examples/TaskRequest.json
+    responses:
+      400:
+        description: Some values are invalid
+        body:
+          application/json:
+            type: Error
+            example: !include examples/InvalidDescError.json
+      201:
+        description: Task created successfully
+        body:
+          application/json:
+            type: TaskDetails
+            example: !include examples/NewTask.json
+  get:
+    description: Consult task list
+    queryParameters:
+      status:
+        displayName: Status
+        type: TaskStatus
+        description: Task status
+        example: PENDING
+        required: false
+      filters:
+        displayName: Filters
+        type: string
+        description: Filters to search and order tasks
+        example: desc:Mañana,date;ASC
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: TaskDetails[]
+            example: !include examples/TaskList.json
+  /{id}:
+    description: Update task body by ID
+    put:
+      body:
+        application/json:
+          type: Task
+          example: !include examples/TaskRequest.json
+      responses:
+        400:
+          description: Some values are invalid
+          body:
+            application/json:
+              type: Error
+              example: !include examples/InvalidDelayError.json
+        404:
+          description: Not found task
+          body:
+            application/json:
+              type: Error
+              example: !include examples/NotFoundError.json
+        409:
+          description: Task is completed
+          body:
+            application/json:
+              type: Error
+              example: !include examples/InvalidActionError.json
+        200:
+          description: Task body updated successfully
+          body:
+            application/json:
+              type: TaskDetails
+              example: !include examples/UpdatedTask.json
+    /status:
+      description: Update task status
+      put:
+        description: Mark task as completed
+        queryParameters:
+          delay:
+            displayName: TaskDelay
+            description: Value of task timer
+            type: number
+            required: true
+        responses:
+          404:
+            description: Not found task
+            body:
+              application/json:
+                type: Error
+                example: !include examples/NotFoundError.json
+          200:
+            description: Task marked as completed successfully
+            body:
+              application/json:
+                type: TaskDetails
+                example: !include examples/CompletedTask.json
+      delete:
+        description: Mark task as deleted
+        responses:
+          404:
+            description: Not found task
+            body:
+              application/json:
+                type: Error
+                example: !include examples/NotFoundError.json
+          200:
+            description: Task marked as deleted successfully
+            body:
+              application/json:
+                type: TaskDetails
+                example: !include examples/TaskDeleted.json

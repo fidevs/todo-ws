@@ -1,0 +1,25 @@
+#%RAML 1.0 DataType
+
+type: object
+displayName: TaskDetails
+properties:
+  id:
+    description: Task ID
+    displayName: ID
+    type: string
+    maxLength: 36
+    minLength: 36
+    required: true
+  desc: !include TaskDescription.raml
+  duration: !include TaskDuration.raml
+  finalDate:
+    description: Date at task ends
+    displayName: FinalizedDate
+    type: string
+    required: false
+  delay:
+    description: Time the user spends on task in minutes
+    displayName: Duration
+    type: number
+    required: false
+  status: !include TaskStatus.raml

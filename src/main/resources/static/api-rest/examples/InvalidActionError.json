@@ -1,0 +1,4 @@
+{
+  "code": "INVALID_ACTION",
+  "message": "No es posible actualizar una tarea completada"
+}

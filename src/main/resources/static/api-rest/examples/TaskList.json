@@ -1,0 +1,16 @@
+[
+  {
+    "id": "3dbb8e57-2944-4b54-a637-4227ab1e40c0",
+    "desc": "Hacer mi tarea",
+    "duration": 120,
+    "status": "PENDING"
+  },
+  {
+    "id": "060caa6a-fb69-4879-80c0-2d45400827b5",
+    "desc": "Pasear a mi perro",
+    "duration": 60,
+    "finalDate": "2022-03-12 14:28:34.54",
+    "delay": 71,
+    "status": "COMPLETED"
+  }
+]
