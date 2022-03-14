@@ -228,7 +228,8 @@
 									},
 									"name": "finalized_at",
 									"type": "TIMESTAMP",
-									"length": 0
+									"length": 0,
+									"nullable": true
 								},
 								{
 									"_type": "ERDColumn",
@@ -238,7 +239,8 @@
 									},
 									"name": "delay",
 									"type": "FLOAT",
-									"length": 0
+									"length": 0,
+									"nullable": true
 								},
 								{
 									"_type": "ERDColumn",
