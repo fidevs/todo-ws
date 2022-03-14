@@ -27,7 +27,7 @@ import lombok.ToString;
 public class Task {
 
     @Id
-    @Column(name = "task_id")
+    @Column(name = "task_id", length = 36)
     private String id;
 
     @Column(name = "description", nullable = false, length = 100)
@@ -44,7 +44,7 @@ public class Task {
     private float delay;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, length = 10)
     private TaskStatus status;
 
     @PrePersist
