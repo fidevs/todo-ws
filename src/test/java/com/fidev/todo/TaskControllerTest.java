@@ -54,7 +54,7 @@ class TaskControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    @Test // Can search tasks without filters, return pending task by default
+    @Test // Can search tasks without filters, return all tasks by default
     void findTaskListWithoutFiltersTest() throws Exception {
         mvc.perform(get("/task"))
                 .andDo(print())
