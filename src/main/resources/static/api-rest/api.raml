@@ -13,6 +13,7 @@ types:
   TaskDetails: !include types/TaskDetails.raml
   TaskStatus: !include types/TaskStatus.raml
   Error: !include types/Error.raml
+  Order: !include types/Order.raml
 
 /task:
   description: Crate and consult tasks
@@ -44,11 +45,17 @@ types:
         description: Task status
         example: PENDING
         required: false
-      filters:
-        displayName: Filters
+      orderBy:
+        displayName: OrderBy
         type: string
-        description: Filters to search and order tasks
-        example: desc:Mañana,date;ASC
+        description: Field name to order task list
+        example: desc
+        required: false
+      order:
+        displayName: Order
+        type: Order
+        description: Order of list
+        example: asc
         required: false
     responses:
       200:

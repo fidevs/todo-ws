@@ -30,16 +30,6 @@ class TaskControllerTest {
 
     @Test // Response with 400 by invalid desc
     void saveTaskWithInvalidValuesTest() throws Exception {
-        // MvcResult result = mvc.perform(
-        // post("/task").contentType(MediaType.APPLICATION_JSON)
-        // .content(JsonUtil.toJson(new TaskDTO("", 10))))
-        // .andExpect(jsonPath("$.code", is("INVALID_DESC")))
-        // .andExpect(jsonPath("$.message", is("Es necesaria una descripción para la
-        // tarea")))
-        // .andExpect(status().isBadRequest())
-        // .andReturn();
-
-        // log.info("Result body: {}", result.getResponse().getContentAsString());
         mvc.perform(post("/task")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(new TaskDTO("", 120))))
@@ -59,7 +49,7 @@ class TaskControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.desc", is(taskDescription)))
-                .andExpect(jsonPath("$.duration", is(taskDuration)))
+                .andExpect(jsonPath("$.duration").value(taskDuration))
                 .andExpect(jsonPath("$.status", is("PENDING")))
                 .andExpect(status().isCreated());
     }
@@ -72,7 +62,7 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$").isArray());
     }
 
-    @Test // Consult task list by each status
+    @Test // Consult task list by each status, order by status by default
     void findTaskListOnlyByStatusTest() throws Exception {
         String[] status = new String[] { "PENDING", "COMPLETED" };
 
@@ -86,21 +76,22 @@ class TaskControllerTest {
         }
     }
 
-    @Test // Consult filtered task list
-    void findTaskListOnlyByFiltersTest() throws Exception {
+    @Test // Consult sorted task list
+    void findTaskListSortedTest() throws Exception {
         mvc.perform(get("/task")
-                .param("filters", "desc:Mañana,date;ASC"))
+                .param("orderBy", "desc")
+                .param("orderBy", "ASC"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }
 
-    @Test // Consult task list by status PENDING, filtered by description and order by
-          // date ASC
+    @Test // Consult task list sorted by status PENDING
     void findTaskListByStatusAndFiltersAndOrderTest() throws Exception {
         mvc.perform(get("/task")
                 .param("status", "PENDING")
-                .param("filters", "desc:Mañana,date;ASC"))
+                .param("orderBy", "desc")
+                .param("orderBy", "ASC"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -142,7 +133,7 @@ class TaskControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    @Test
+    @Test // Update task successfully
     void updateTaskSuccessfully() throws Exception {
         // TODO: Get taskID from DB
         String taskID = "SOME_ID", description = "Hacer mi tarea de física";
@@ -153,12 +144,12 @@ class TaskControllerTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.id", is(taskID)))
                 .andExpect(jsonPath("$.desc", is(description)))
-                .andExpect(jsonPath("$.duration", is(delay)))
+                .andExpect(jsonPath("$.duration").value(delay))
                 .andExpect(jsonPath("$.status", is("PENDING")))
                 .andExpect(status().isOk());
     }
 
-    @Test
+    @Test // Mark task as completed by invalid ID
     void markTaskAsCompletedByInvalidIDTest() throws Exception {
         mvc.perform(put("/task/{id}/status", "f72094de-3228-4e55-9018-5280a6c341d3")
                 .param("delay", "120"))
@@ -168,7 +159,7 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.message", is("No se encontró la tarea con el ID solicitado")));
     }
 
-    @Test
+    @Test // Mark task as completed
     void markTaskAsCompletedSuccessfullyTest() throws Exception {
         String taskID = "SOME_ID"; // TODO: Get from db
         mvc.perform(put("/task/{id}/status", taskID)
@@ -183,7 +174,7 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.status", is("COMPLETED")));
     }
 
-    @Test
+    @Test // Mark task as deleted by invalid ID
     void markTaskAsDeletedByInvalidIDTest() throws Exception {
         mvc.perform(put("/task/{id}/status", "f72094de-3228-4e55-9018-5280a6c341d3"))
                 .andDo(print())
@@ -192,7 +183,7 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.message", is("No se encontró la tarea con el ID solicitado")));
     }
 
-    @Test
+    @Test // Mark task as deleted
     void markTaskAsDeletedSuccessfullyTest() throws Exception {
         String taskID = "SOME_ID"; // TODO: Get from db
         mvc.perform(delete("/task/{id}/status", taskID))
