@@ -1,4 +1,4 @@
 {
   "code": "INVALID_DESC",
-  "message": "Es necesaria una descripción para la tarea"
+  "message": "La descripción de la tarea no es valida"
 }

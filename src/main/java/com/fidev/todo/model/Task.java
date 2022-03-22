@@ -50,12 +50,12 @@ public class Task {
     @PrePersist
     protected void prePersist() {
         id = UUID.randomUUID().toString();
-        status = TaskStatus.PENDING;
     }
 
     public Task(String description, float duration) {
         this.description = description;
         this.duration = duration;
+        this.status = TaskStatus.PENDING;
     }
     
 }

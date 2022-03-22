@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class TaskDetails {
+public class TaskDetailsDTO {
     private String id;
     private String desc;
     private float duration;

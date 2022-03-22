@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import com.fidev.todo.util.AppConstants;
 import com.fidev.todo.views.TaskDTO;
 
 @Transactional
@@ -34,8 +35,8 @@ class TaskControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(new TaskDTO("", 120))))
                 .andDo(print())
-                .andExpect(jsonPath("$.code", is("INVALID_DESC")))
-                .andExpect(jsonPath("$.message", is("Es necesaria una descripción para la tarea")))
+                .andExpect(jsonPath("$.code", is(AppConstants.INVALID_DESC_CODE)))
+                .andExpect(jsonPath("$.message", is(AppConstants.INVALID_DESC_MESSAGE)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -50,7 +51,7 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.desc", is(taskDescription)))
                 .andExpect(jsonPath("$.duration").value(taskDuration))
-                .andExpect(jsonPath("$.status", is("PENDING")))
+                .andExpect(jsonPath("$.status", is(AppConstants.PENDING_STATUS)))
                 .andExpect(status().isCreated());
     }
 
@@ -64,7 +65,7 @@ class TaskControllerTest {
 
     @Test // Consult task list by each status, order by status by default
     void findTaskListOnlyByStatusTest() throws Exception {
-        String[] status = new String[] { "PENDING", "COMPLETED" };
+        String[] status = new String[] { AppConstants.PENDING_STATUS, AppConstants.COMPLETED_STATUS };
 
         for (String state : status) {
             mvc.perform(get("/task")
@@ -80,7 +81,7 @@ class TaskControllerTest {
     void findTaskListSortedTest() throws Exception {
         mvc.perform(get("/task")
                 .param("orderBy", "desc")
-                .param("orderBy", "ASC"))
+                .param("order", "ASC"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
@@ -89,13 +90,13 @@ class TaskControllerTest {
     @Test // Consult task list sorted by status PENDING
     void findTaskListByStatusAndFiltersAndOrderTest() throws Exception {
         mvc.perform(get("/task")
-                .param("status", "PENDING")
+                .param("status", AppConstants.PENDING_STATUS)
                 .param("orderBy", "desc")
-                .param("orderBy", "ASC"))
+                .param("order", "ASC"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].status", is("PENDING")));
+                .andExpect(jsonPath("$[0].status", is(AppConstants.PENDING_STATUS)));
     }
 
     @Test // Try to update task with a invalid delay value
@@ -105,8 +106,8 @@ class TaskControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(new TaskDTO("Alguna descripción", -1))))
                 .andDo(print())
-                .andExpect(jsonPath("$.code", is("INVALID_DELAY")))
-                .andExpect(jsonPath("$.message", is("La duración estimada no puede ser menor a 1")))
+                .andExpect(jsonPath("$.code", is(AppConstants.INVALID_DELAY_CODE)))
+                .andExpect(jsonPath("$.message", is(AppConstants.INVALID_DELAY_MESSAGE)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -116,8 +117,8 @@ class TaskControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(new TaskDTO("Alguna descripción", 5))))
                 .andDo(print())
-                .andExpect(jsonPath("$.code", is("NOT_FOUND")))
-                .andExpect(jsonPath("$.message", is("No se encontró la tarea con el ID solicitado")))
+                .andExpect(jsonPath("$.code", is(AppConstants.NOT_FOUND_CODE)))
+                .andExpect(jsonPath("$.message", is(AppConstants.NOT_FOUND_MESSAGE)))
                 .andExpect(status().isNotFound());
     }
 
@@ -128,8 +129,8 @@ class TaskControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.toJson(new TaskDTO("Alguna descripción", 5))))
                 .andDo(print())
-                .andExpect(jsonPath("$.code", is("INVALID_ACTION")))
-                .andExpect(jsonPath("$.message", is("No es posible actualizar una tarea completada")))
+                .andExpect(jsonPath("$.code", is(AppConstants.INVALID_ACTION_CODE)))
+                .andExpect(jsonPath("$.message", is(AppConstants.INVALID_ACTION_MESSAGE)))
                 .andExpect(status().isConflict());
     }
 
@@ -145,7 +146,7 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.id", is(taskID)))
                 .andExpect(jsonPath("$.desc", is(description)))
                 .andExpect(jsonPath("$.duration").value(delay))
-                .andExpect(jsonPath("$.status", is("PENDING")))
+                .andExpect(jsonPath("$.status", is(AppConstants.PENDING_STATUS)))
                 .andExpect(status().isOk());
     }
 
@@ -155,8 +156,8 @@ class TaskControllerTest {
                 .param("delay", "120"))
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code", is("NOT_FOUND")))
-                .andExpect(jsonPath("$.message", is("No se encontró la tarea con el ID solicitado")));
+                .andExpect(jsonPath("$.code", is(AppConstants.NOT_FOUND_CODE)))
+                .andExpect(jsonPath("$.message", is(AppConstants.NOT_FOUND_MESSAGE)));
     }
 
     @Test // Mark task as completed
@@ -171,16 +172,16 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.duration").exists())
                 .andExpect(jsonPath("$.finalDate").exists())
                 .andExpect(jsonPath("$.delay", is(120)))
-                .andExpect(jsonPath("$.status", is("COMPLETED")));
+                .andExpect(jsonPath("$.status", is(AppConstants.COMPLETED_STATUS)));
     }
 
     @Test // Mark task as deleted by invalid ID
     void markTaskAsDeletedByInvalidIDTest() throws Exception {
-        mvc.perform(put("/task/{id}/status", "f72094de-3228-4e55-9018-5280a6c341d3"))
+        mvc.perform(delete("/task/{id}/status", "f72094de-3228-4e55-9018-5280a6c341d3"))
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code", is("NOT_FOUND")))
-                .andExpect(jsonPath("$.message", is("No se encontró la tarea con el ID solicitado")));
+                .andExpect(jsonPath("$.code", is(AppConstants.NOT_FOUND_CODE)))
+                .andExpect(jsonPath("$.message", is(AppConstants.NOT_FOUND_MESSAGE)));
     }
 
     @Test // Mark task as deleted
@@ -192,7 +193,7 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.id", is(taskID)))
                 .andExpect(jsonPath("$.desc").exists())
                 .andExpect(jsonPath("$.duration").exists())
-                .andExpect(jsonPath("$.status", is("DELETED")));
+                .andExpect(jsonPath("$.status", is(AppConstants.DELETED_STATUS)));
     }
 
 }
