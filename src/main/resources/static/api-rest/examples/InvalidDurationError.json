@@ -1,4 +1,4 @@
 {
-  "code": "INVALID_DELAY",
+  "code": "INVALID_DURATION",
   "message": "La duración estimada no puede ser menor a 1"
 }

@@ -1,6 +1,5 @@
 package com.fidev.todo.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -76,8 +75,11 @@ public class TaskServiceImpl implements TaskService {
         try { // Obtain task status to filter query
             taskStatus = TaskStatus.valueOf(status);
         } catch (Exception e) {
-            log.warn("Status param is invalid: [{}]. Task list search without status filter", status);
-            e.printStackTrace();
+            log.warn(
+                "Status param is invalid: [{}]. Task list search without status filter\n ERROR: {}",
+                status,
+                e.getMessage()
+            );
         }
 
         // Search task list
@@ -130,7 +132,7 @@ public class TaskServiceImpl implements TaskService {
      * @throws TodoException
      */
     @Override
-    public TaskDetailsDTO markTaskByIDAsCompleted(String id, float delay) throws TodoException {
+    public TaskDetailsDTO markTaskByIDAsCompleted(String id, Float delay) throws TodoException {
         Task task = searchTaskByID(id); // Search task
 
         // Update status and delay of task and set date finish
@@ -198,8 +200,8 @@ public class TaskServiceImpl implements TaskService {
         if (task.getDuration() < 1) {
             log.error("Invalid task duration: [{}]", task.getDuration());
             throw new TodoException(
-                AppConstants.INVALID_DELAY_MESSAGE,
-                AppConstants.INVALID_DELAY_CODE,
+                AppConstants.INVALID_DURATION_MESSAGE,
+                AppConstants.INVALID_DURATION_CODE,
                 HttpStatus.BAD_REQUEST
             );
         }

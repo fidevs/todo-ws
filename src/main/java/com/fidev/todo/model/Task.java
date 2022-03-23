@@ -57,5 +57,13 @@ public class Task {
         this.duration = duration;
         this.status = TaskStatus.PENDING;
     }
+
+    public Task(String description, float duration, Date finDate, float delay, TaskStatus status) {
+        this.description = description;
+        this.duration = duration;
+        this.finDate = finDate;
+        this.delay = delay;
+        this.status = status;
+    }
     
 }

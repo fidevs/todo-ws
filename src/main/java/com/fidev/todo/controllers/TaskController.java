@@ -65,9 +65,9 @@ public class TaskController {
     }
 
     @PutMapping("/{id}/status") // Mark task as completed
-    public TaskDetailsDTO markTaskAsCompleted(@PathVariable String id, @RequestParam(required = true) float delay)
+    public TaskDetailsDTO markTaskAsCompleted(@PathVariable String id, @RequestParam(required = true) Float delay)
         throws TodoException {
-        log.info("Mark task with id: {} as completed", id);
+        log.info("Mark task with id: {} as completed in {} minutes", id, delay);
 
         return service.markTaskByIDAsCompleted(id, delay);
     }

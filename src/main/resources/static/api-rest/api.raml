@@ -76,7 +76,7 @@ types:
           body:
             application/json:
               type: Error
-              example: !include examples/InvalidDelayError.json
+              example: !include examples/InvalidDurationError.json
         404:
           description: Not found task
           body:
@@ -106,6 +106,8 @@ types:
             type: number
             required: true
         responses:
+          400:
+            description: Required request parameter 'delay'
           404:
             description: Not found task
             body:

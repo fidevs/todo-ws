@@ -14,7 +14,7 @@ public interface TaskService {
 
     TaskDetailsDTO updateTaskByID(String id, TaskDTO update) throws TodoException;
 
-    TaskDetailsDTO markTaskByIDAsCompleted(String id, float delay) throws TodoException;
+    TaskDetailsDTO markTaskByIDAsCompleted(String id, Float delay) throws TodoException;
 
     TaskDetailsDTO markTaskByIDAsDeleted(String id) throws TodoException;
 

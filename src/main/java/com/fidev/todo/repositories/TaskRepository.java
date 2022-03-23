@@ -13,5 +13,7 @@ public interface TaskRepository extends JpaRepository<Task, String> {
     <T> List<T> findAllByStatus(TaskStatus status, Sort sort, Class<T> type);
 
     <T> List<T> findAllByStatusNot(TaskStatus status, Sort sort, Class<T> type);
+
+    <T> T findFirstByStatus(TaskStatus status, Class<T> type);
     
 }

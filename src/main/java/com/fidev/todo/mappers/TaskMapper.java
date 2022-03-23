@@ -14,7 +14,7 @@ public class TaskMapper {
                 task.getDescription(),
                 task.getDuration(),
                 task.getFinDate() == null ? null : task.getFinDate().toString(),
-                0,
+                task.getDelay(),
                 task.getStatus().toString()
         );
     }

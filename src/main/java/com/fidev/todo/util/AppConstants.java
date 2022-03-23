@@ -22,8 +22,8 @@ public class AppConstants {
 
     public static final String INVALID_ACTION_CODE = "INVALID_ACTION";
     public static final String INVALID_ACTION_MESSAGE = "No es posible actualizar una tarea completada";
-    public static final String INVALID_DELAY_CODE = "INVALID_DELAY";
-    public static final String INVALID_DELAY_MESSAGE = "La duración estimada no puede ser menor a 1";
+    public static final String INVALID_DURATION_CODE = "INVALID_DURATION";
+    public static final String INVALID_DURATION_MESSAGE = "La duración estimada no puede ser menor a 1";
     public static final String INVALID_DESC_CODE = "INVALID_DESC";
     public static final String INVALID_DESC_MESSAGE = "La descripción de la tarea no es valida";
     public static final String NOT_FOUND_CODE = "NOT_FOUND";
