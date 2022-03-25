@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fidev.todo.exceptions.TodoException;
 import com.fidev.todo.service.TaskService;
-import com.fidev.todo.util.AppConstants;
 import com.fidev.todo.views.TaskDTO;
 import com.fidev.todo.views.TaskDetailsDTO;
 
